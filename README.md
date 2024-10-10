@@ -83,7 +83,3 @@ This project is licensed under the MIT License.
 For any questions or inquiries, please contact:
 - **Email**: jasperfernandezvegas01@gmail.com
 - **GitHub**: github.com/NileXYII
-
----
-
-Feel free to adjust any sections according to your project's specific details!
