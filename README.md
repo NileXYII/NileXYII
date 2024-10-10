@@ -81,8 +81,8 @@ This project is licensed under the MIT License.
 
 ## Contact
 For any questions or inquiries, please contact:
-- **Email**: support@vapeshop.com
-- **GitHub**: [your-username](https://github.com/your-username)
+- **Email**: jasperfernandezvegas01@gmail.com
+- **GitHub**: github.com/NileXYII
 
 ---
 
