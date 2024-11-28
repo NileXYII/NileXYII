@@ -1,51 +1,59 @@
+<?php
+// PHP can be used for dynamic functionality (e.g., fetch products from a database).
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vape Shop</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <title>Mabini Vape Shop</title>
+    <!-- Link to External CSS -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <nav class="navigation animate__animated animate__fadeInDown">
-        <div class="top-nav">
-            <ul>
-                <li><a href="#" class="nav-link active">HOME</a></li>
-                <li><a href="cart.php" class="nav-link">DISPOSABLE VAPE</a></li>
-                <li><a href="#" class="nav-link">POD VAPE KIT</a></li>
-                <li><a href="#" class="nav-link">BOXMOD VAPE KIT</a></li>
-                <li><a href="contact.php" class="nav-link">CONTACT US</a></li>
-                <div class="search-box">
-                    <input type="text" placeholder="Search products...">
-                </div>
-                <div class="auth-buttons">
-                    <a href="signup.php" class="btn sign-up">Sign Up</a>
-                    <a href="login.php" class="btn login">Login</a>
-                </div>
-            </ul>
+    <header class="header">
+        <div class="logo">
+            <img src="2.png" alt="Mabini Vape Shop Logo">
         </div>
-    </nav>
-
-    <div class="container animate__animated animate__fadeIn">
-        <div class="product-section">
-            <img src="images/2.png" alt="CBD Vape Products" class="product-image">
+        <nav class="nav">
+            <a href="index.php">HOME</a>
+            <a href="cart.php">DISPOSABLE VAPE</a>
+            <a href="#">POD VAPE KIT</a>
+            <a href="#">BOXMOD VAPE KIT</a>
+            <a href="#">CONTACT US</a>
+        </nav>
+        <div class="auth-links">
+            <a href="register.php" class="button">Sign Up</a>
+            <a href="land.php" class="button">Login</a>
         </div>
-        
-        <div class="logo-section">
-            <img src="images/1.png" alt="Vape Shop Logo" class="logo-image">
-        </div>
-    </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        window.onscroll = function() {
-            let winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            let scrolled = (winScroll / height) * 100;
-            document.querySelector(".scroll-indicator").style.width = scrolled + "%";
-        };
-    });
-    </script>
+    </header>
+    <main>
+        <section class="hero">
+            <h1>Welcome to Mabini Vape Shop</h1>
+            <p>Your one-stop shop for premium vape products.</p>
+        </section>
+        <section class="product-display">
+            <div class="product-card">
+                <img src="5.png" alt="Product 1">
+               
+              
+            </div>
+            <div class="product-card">
+                <img src="logo.png" alt="Product 2">
+               
+            </div>
+            <div class="product-card">
+                <img src="3.png" alt="Product 3">
+                
+            </div>
+        </section>
+    </main>
+    <footer class="footer">
+        <p>&copy; 2024 Mabini Vape Shop. All rights reserved.</p>
+    </footer>
 </body>
 </html>

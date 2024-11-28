@@ -1,51 +1,42 @@
 <?php
 session_start();
+include_once('connection.php');
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $conn = new mysqli('localhost', 'username', 'password', 'vape_shop');
+if (isset($_POST['login'])) {
 
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    $username = $_POST['username'];
+    $password = md5($_POST['password']);
 
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    $sql = "SELECT * FROM `tbl_user` WHERE `username`='$username' AND `password`='$password'";
+    $result = mysqli_query($conn, $sql);
 
-    $sql = "SELECT * FROM users WHERE email='$email'";
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            header('Location: dashboard.php');
-        } else {
-            echo "Invalid password.";
-        }
+    if (empty($_POST['username']) && empty($_POST['password'])) {
+        echo "<script>alert('Please Fill Username and Password');</script>";
+        exit;
+    } elseif (empty($_POST['password'])) {
+        echo "<script>alert('Please Fill Password');</script>";
+        exit;
+    } elseif (empty($_POST['username'])) {
+        echo "<script>alert('Please Fill Username);</script>";
+        exit;
     } else {
-        echo "No user found with that email.";
+        if (mysqli_num_rows($result) > 0) {
+            $row = mysqli_fetch_array($result);
+            $name = $row['name'];
+            $username = $row['username'];
+            $password = $row['password'];
+
+
+            if ($username == $username && $password == $password) {
+                $_SESSION['name'] = $name;
+                $_SESSION['username'] = $username;
+                $_SESSION['password'] = $password;
+                header('location:welcome.php');
+            }
+        } else {
+            echo "<script>alert('Invalid Username or Password');</script>";
+            exit;
+        }
     }
 
-    $conn->close();
 }
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="form-container">
-        <form method="POST" action="">
-            <h2>Log In</h2>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">Log in</button>
-        </form>
-    </div>
-</body>
-</html>

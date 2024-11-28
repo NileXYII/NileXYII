@@ -1,63 +1,65 @@
+<?php
+// Sample cart items (In practice, fetch from a session or database)
+$cartItems = [
+    ["image" => "1.png", "name" => "WeCloud Strawberry", "price" => 200.00, ],
+    ["image" => "2.png", "name" => "Poota Lychee", "price" => 400.00, ],
+    ["image" => "3.png", "name" => "Black Elite Lemon Cola", "price" => 600.00, ],
+    ["image" => "4.png", "name" => "Twst Cool Pomberry", "price" => 500.00, ]
+];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grid Cards</title>
+    <title>Cart - Mabini Vape Shop</title>
     <link rel="stylesheet" href="cart.css">
-    <link rel="stylesheet" href="style.css">
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
-<nav class="navigation animate__animated animate__fadeInDown">
-        <div class="top-nav">
-            <ul>
-                <li><a href="#" class="nav-link active">HOME</a></li>
-                <li><a href="cart.php" class="nav-link">DISPOSABLE VAPE</a></li>
-                <li><a href="#" class="nav-link">POD VAPE KIT</a></li>
-                <li><a href="#" class="nav-link">BOXMOD VAPE KIT</a></li>
-                <li><a href="contact.php" class="nav-link">CONTACT US</a></li>
-                <div class="search-box">
-                    <input type="text" placeholder="Search products...">
-                </div>
-                <div class="auth-buttons">
-                    <a href="signup.php" class="btn sign-up">Sign Up</a>
-                    <a href="login.php" class="btn login">Login</a>
-                </div>
-            </ul>
-        </div>
 <body>
-    <div class="grid-container">
-        <!-- Repeat this block for each card -->
-        <?php for ($i = 0; $i < 12; $i++): ?>
-        <div class="grid-item">
-            <div class="card-3d-wrap">
-                <div class="card-3d-wrapper">
-                    <div class="card-front">
-                        <div class="pricing-wrap">
-                            <h4 class="mb-5">BLACK</h4>
-                            <h2 class="mb-2"><sup>PHP</sup>499 / 12:12<sup>COD</sup></h2>
-                            <p class="mb-4">lowest price</p>
-                            <p class="mb-1"><i class="uil uil-location-pin-alt size-22"></i></p>
-                            <p class="mb-4"></p>
-                            <a href="#0" class="link">add to cart</a>
-                        </div>
-                    </div>
-                    <div class="card-back">
-                        <div class="pricing-wrap">
-                            <h4 class="mb-5">Camping</h4>
-                            <h2 class="mb-2"><sup>$</sup>29 / 8<sup>hrs</sup></h2>
-                            <p class="mb-4">per person</p>
-                            <p class="mb-1"><i class="uil uil-location-pin-alt size-22"></i></p>
-                            <p class="mb-4">Tara, Serbia</p>
-                            <a href="#0" class="link">Choose Date</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Retained Navbar from index.php -->
+    <header class="header">
+        <div class="logo">
+            <img src="images/logo.png" alt="Mabini Vape Shop Logo">
         </div>
-        <?php endfor; ?>
-    </div>
+        <nav class="nav">
+            <a href="index.php">HOME</a>
+            <a href="cart.php">DISPOSABLE VAPE</a>
+            <a href="#">POD VAPE KIT</a>
+            <a href="#">BOXMOD VAPE KIT</a>
+            <a href="#">CONTACT US</a>
+        </nav>
+        <div class="auth-links">
+            <a href="#" class="button">Sign Up</a>
+            <a href="#" class="button">Login</a>
+        </div>
+    </header>
+
+    <!-- Cart Section (Product Grid) -->
+    <main>
+        <section class="cart-container">
+            <h1>Products </h1>
+            <div class="product-grid">
+                <?php foreach ($cartItems as $item): ?>
+                <div class="product-card">
+                    <img src="<?= $item['image'] ?>" alt="<?= $item['name'] ?>" class="product-img">
+                    <div class="product-details">
+                        <h3><?= $item['name'] ?></h3>
+                        <p>₱<?= number_format($item['price'], 2) ?></p>
+                    </div>
+                    <button class="remove-btn">Add to Cart</button>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <!-- Cart Summary Section -->
+       
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 Mabini Vape Shop. All rights reserved.</p>
+    </footer>
 </body>
 </html>
