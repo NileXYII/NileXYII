@@ -1,5 +1,7 @@
 <!doctype html>
 <html lang="en">
+<?php include 'nav.php'; ?>
+
 
 <head>
   <title>Register</title>

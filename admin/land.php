@@ -25,7 +25,7 @@
         </div>
         <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
           <form action="login.php" method="post">
-            <p class="text-center h1 fw-bold mb-4 mx-1 mx-md-3 mt-3">Login </p>
+            <p class="text-center h1 fw-bold mb-4 mx-1 mx-md-3 mt-3">ADMIN Login </p>
             <!-- Email input -->
             <div class="form-outline mb-4">
               <label class="form-label" for="form1Example13"> <i class="bi bi-person-circle"></i> Username</label>
@@ -50,12 +50,7 @@
             </div>
 
           </form><br>
-          <p align="center">I don't have any account 
-    <a href="register.php" class="text-warning" style="font-weight: 600; text-decoration: none; color: green;">Register Here</a>
-</p>
-<p align="center">Admin? 
-    <a href="admin/land.php" class="text-warning" style="font-weight: 600; text-decoration: none; color: green;">Login Here</a>
-</p>
+          
         </div>
       </div>
     </div>

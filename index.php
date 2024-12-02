@@ -14,23 +14,11 @@
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
+
+<?php include 'nav.php'; ?>
+
 <body>
-    <header class="header">
-        <div class="logo">
-            <img src="2.png" alt="Mabini Vape Shop Logo">
-        </div>
-        <nav class="nav">
-            <a href="index.php">HOME</a>
-            <a href="cart.php">DISPOSABLE VAPE</a>
-            <a href="#">POD VAPE KIT</a>
-            <a href="#">BOXMOD VAPE KIT</a>
-            <a href="#">CONTACT US</a>
-        </nav>
-        <div class="auth-links">
-            <a href="register.php" class="button">Sign Up</a>
-            <a href="land.php" class="button">Login</a>
-        </div>
-    </header>
+    
     <main>
         <section class="hero">
             <h1>Welcome to Mabini Vape Shop</h1>
