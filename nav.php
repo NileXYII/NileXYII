@@ -72,11 +72,11 @@
 <body>
     <div class="navbar">
         <div class="nav-links">
-            <a href="home.php">HOME</a>
-            <a href="disposable_vape.php">DISPOSABLE VAPE</a>
-            <a href="pod_vape_kit.php">POD VAPE KIT</a>
-            <a href="boxmod_vape_kit.php">BOXMOD VAPE KIT</a>
-            <a href="contact_us.php">CONTACT US</a>
+            <a href="index.php">HOME</a>
+            <a href="shop.php">DISPOSABLE VAPE</a>
+            <a href="shop.php">POD VAPE KIT</a>
+            <a href="shop.php">BOXMOD VAPE KIT</a>
+            <a href="contact-us.php">CONTACT US</a>
         </div>
         <div class="search-bar">
             <input type="text" placeholder="Search...">

@@ -72,18 +72,14 @@
 <body>
     <div class="navbar">
         <div class="nav-links">
-            <a href="welcome.php">HOME</a>
-            <a href="shop.php">SHOP</a>
-            <a href="orders.php">ORDERS</a>
-            <a href="inbox.php">INBOX</a>
-            <a href="contact-us.php">CONTACT US</a>
+            
         </div>
         <div class="search-bar">
             <input type="text" placeholder="Search...">
         </div>
         <div class="auth-links">
             <a href="profile.php">PROFILE</a> |
-            <a href="index.php" class="logout-btn">LOG OUT</a>
+            <a href="land.php" class="logout-btn">LOG OUT</a>
             </div>
     </div>
 </body>

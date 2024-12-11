@@ -73,7 +73,7 @@
     <div class="navbar">
         <div class="nav-links">
             <a href="welcome.php">HOME</a>
-            <a href="disposable_vape.php">SHOP</a>
+            <a href="add.php">ADD PRODUCT</a>
             <a href="orders.php">TO BE</a>
             <a href="inbox.php">CONTINUED</a>
             <a href="contact_us.php">ON FINAL COOMIT</a>
