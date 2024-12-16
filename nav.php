@@ -73,9 +73,9 @@
     <div class="navbar">
         <div class="nav-links">
             <a href="index.php">HOME</a>
-            <a href="shop.php">DISPOSABLE VAPE</a>
-            <a href="shop.php">POD VAPE KIT</a>
-            <a href="shop.php">BOXMOD VAPE KIT</a>
+            <a href="preview.php">DISPOSABLE VAPE</a>
+            <a href="preview.php">POD VAPE KIT</a>
+            <a href="preview.php">BOXMOD VAPE KIT</a>
             <a href="contact-us.php">CONTACT US</a>
         </div>
         <div class="search-bar">

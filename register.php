@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="en">
-<?php include 'nav.php'; ?>
+<?php include 'nav-land.php'; ?>
 
 
 <head>

@@ -1,117 +1,197 @@
 <?php
+// Enhanced error reporting and session management
 session_start();
-include_once('connection.php');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Ensure session variables are set
-if (!isset($_SESSION['name']) || !isset($_SESSION['username'])) {
-    header("Location: login.php");
-    exit();
-}
-$name = $_SESSION['name'];
-$username = $_SESSION['username'];
-
-$host = 'localhost';
-$user = 'root';
-$password = '';
-$dbname = 'login_register_db';
-
-$conn = new mysqli($host, $user, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+// Include database connection with error handling
+try {
+    include 'connection.php';
+    
+    if ($conn->connect_error) {
+        throw new Exception("Database connection failed: " . $conn->connect_error);
+    }
+} catch (Exception $e) {
+    error_log($e->getMessage());
+    die("Sorry, there was a problem connecting to the database. Please try again later.");
 }
 
-// Fetch products
-$result = $conn->query("SELECT id, name, price, description FROM products ORDER BY name ASC");
+// Clean image path function
+function cleanImagePath($imagePath) {
+    // Remove duplicate 'uploads/' and ensure correct path
+    $cleanPath = preg_replace('/uploads\/uploads\//', 'uploads/', $imagePath);
+    return str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $cleanPath);
+}
+
+// Cart Management Class
+class CartManager {
+    public static function addToCart($product, $quantity) {
+        // Validate quantity between 1-10
+        $quantity = max(1, min(intval($quantity), 10));
+
+        $cart_item = [
+            'id' => $product['id'],
+            'name' => $product['name'],
+            'price' => $product['price'],
+            'image' => $product['image'],
+            'quantity' => $quantity
+        ];
+
+        // Initialize or update cart
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+
+        $cart = &$_SESSION['cart'];
+        $found = false;
+
+        // Update quantity if item exists
+        foreach ($cart as &$item) {
+            if ($item['id'] == $product['id']) {
+                $item['quantity'] = min($item['quantity'] + $quantity, 10);
+                $found = true;
+                break;
+            }
+        }
+
+        // Add new item if not found
+        if (!$found) {
+            $cart[] = $cart_item;
+        }
+    }
+}
+
+// Handle Add to Cart with improved error handling
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
+    try {
+        // Validate and sanitize inputs
+        $product = [
+            'id' => filter_input(INPUT_POST, 'product_id', FILTER_VALIDATE_INT),
+            'name' => filter_input(INPUT_POST, 'product_name', FILTER_SANITIZE_STRING),
+            'price' => filter_input(INPUT_POST, 'product_price', FILTER_VALIDATE_FLOAT),
+            'image' => filter_input(INPUT_POST, 'product_image', FILTER_SANITIZE_STRING)
+        ];
+
+        $quantity = filter_input(INPUT_POST, 'quantity', FILTER_VALIDATE_INT, [
+            'options' => ['min_range' => 1, 'max_range' => 10]
+        ]);
+
+        // Validate product data
+        if ($product['id'] === false || $product['name'] === false || 
+            $product['price'] === false || $quantity === false) {
+            throw new Exception("Invalid product or quantity");
+        }
+
+        // Add to cart
+        CartManager::addToCart($product, $quantity);
+
+        // Redirect to prevent form resubmission
+        header("Location: " . $_SERVER['PHP_SELF']);
+        exit();
+
+    } catch (Exception $e) {
+        // Log error and set error message
+        error_log($e->getMessage());
+        $_SESSION['error'] = "Sorry, we couldn't add the item to your cart.";
+    }
+}
+
+// Fetch products with error handling
+try {
+    // Pagination setup
+    $products_per_page = 12;
+    $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+    $offset = ($page - 1) * $products_per_page;
+
+    // Get total products count
+    $count_result = $conn->query("SELECT COUNT(*) as total FROM products");
+    $total_products = $count_result->fetch_assoc()['total'];
+    $total_pages = ceil($total_products / $products_per_page);
+
+    // Fetch products with pagination
+    $query = "SELECT * FROM products LIMIT ? OFFSET ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ii", $products_per_page, $offset);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result === false) {
+        throw new Exception("Error fetching products: " . $conn->error);
+    }
+} catch (Exception $e) {
+    error_log($e->getMessage());
+    die("Sorry, we couldn't load the products right now.");
+}
 ?>
 
 <!DOCTYPE html>
-<html>
-<?php include 'userdashboard/user-nav.php'; ?>
-
+<html lang="en">
 <head>
-    <title>Shop - Mabini Vape Shop</title>
-    <style>
-        /* Sidebar styles */
-        .sidebar {
-            height: 100vh;
-            width: 220px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            background-color: gray;
-            padding-top: 20px;
-            color: black;
-        }
-
-        .sidebar a {
-            padding: 10px 15px;
-            text-decoration: none;
-            display: block;
-            color: black;
-        }
-
-        .sidebar a:hover {
-            background-color: #575757;
-        }
-
-        /* Main content */
-        .content {
-            margin-left: 260px; /* Same as the sidebar width */
-            padding: 20px;
-        }
-
-        .product-card {
-            border: 1px solid black;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 10px;
-            display: inline-block;
-            width: calc(30% - 20px);
-            box-sizing: border-box;
-            text-align: center;
-        }
-
-        .product-card h3 {
-            margin: 10px 0;
-        }
-
-        .product-card p {
-            margin: 5px 0;
-        }
-
-        .product-card button {
-            padding: 10px 15px;
-            background-color: #575757;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .product-card button:hover {
-            background-color: black;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop</title>
+    <link rel="stylesheet" href="shop.css">
 </head>
 <body>
-   
+    <?php include 'usernavigation.php'; ?>
 
     <div class="content">
-        <h1>Welcome, Yvan!</h1>
-        <h2>Our Products</h2>
+        <h1></h1>
 
-        <?php while ($row = $result->fetch_assoc()): ?>
-        <div class="product-card">
-            <h3><?php echo htmlspecialchars($row['name']); ?></h3>
-            <p>Price: <?php echo number_format($row['price'], 2); ?> PHP</p>
-            <p><?php echo htmlspecialchars($row['description']); ?></p>
-            <form method="POST" action="add_to_cart.php">
-                <input type="hidden" name="product_id" value="<?php echo $row['id']; ?>">
-                <button type="submit">Add to Cart</button>
-            </form>
+        <!-- Error Message Display -->
+        <?php 
+        if (isset($_SESSION['error'])) {
+            echo "<div class='error-message'>" . htmlspecialchars($_SESSION['error']) . "</div>";
+            unset($_SESSION['error']);
+        }
+        ?>
+
+        <div class="product-list">
+            <?php while ($row = $result->fetch_assoc()): ?>
+                <div class="product">
+                    <?php
+                    // Clean and validate image path
+                    $cleanedImagePath = cleanImagePath($row['image']);
+                    $imagePath = "admin/" . $cleanedImagePath;
+                    $fullImagePath = $_SERVER['DOCUMENT_ROOT'] . '/vape/' . $imagePath;
+                    ?>
+
+                    <!-- Image Display with Error Handling -->
+                    <?php if (file_exists($fullImagePath)): ?>
+                        <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
+                    <?php else: ?>
+                        <div class="no-image">
+                            <p>Image Unavailable</p>
+                            <!-- Debug info (remove in production) -->
+                            <small><?= htmlspecialchars($fullImagePath) ?></small>
+                        </div>
+                    <?php endif; ?>
+
+                    <h2><?= htmlspecialchars($row['name']) ?></h2>
+                    <p>Price: <?= number_format($row['price'], 2) ?> PHP</p>
+
+                    <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>">
+                        <input type="hidden" name="product_id" value="<?= $row['id'] ?>">
+                        <input type="hidden" name="product_name" value="<?= $row['name'] ?>">
+                        <input type="hidden" name="product_price" value="<?= $row['price'] ?>">
+                        <input type="hidden" name="product_image" value="<?= $row['image'] ?>">
+                        <input type="number" name="quantity" value="1" min="1" max="10" required>
+                        <button type="submit" name="add_to_cart">Add to Cart</button>
+                    </form>
+                </div>
+            <?php endwhile; ?>
         </div>
-        <?php endwhile; ?>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                <a href="?page=<?= $i ?>" <?= ($page == $i ? 'class="active"' : '') ?>>
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+        </div>
+
+        <a href="cart.php" class="btn">View Cart</a>
     </div>
 </body>
 </html>

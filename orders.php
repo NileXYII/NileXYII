@@ -6,10 +6,6 @@
     <title>My Orders</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
-
-<?php include 'userdashboard/user-nav.php'; ?>
-
 <body>
     <div class="orders-container">
         <div class="header">
