@@ -75,15 +75,18 @@
             <a href="welcome.php">HOME</a>
             <a href="shop.php">DISPOSABLE VAPE</a>
             <a href="shop.php">POD VAPE KIT</a>
-            <a href="shop.php">BOXMOD VAPE KIT</a>
+            <a href="inbox.php">INBOX</a>
+            <a href="orders.php">ORDERS</a>
+
             <a href="contact-us.php">CONTACT US</a>
+            <a href="#">User Profile</a> 
+            <a href="land.php" class="logout-btn">LOG OUT</a>
         </div>
         <div class="search-bar">
             <input type="text" placeholder="Search...">
         </div>
         <div class="auth-links">
-            <a href="#">User Profile</a> |
-            <a href="land.php" class="logout-btn">LOG OUT</a>
+            
             </div>
     </div>
 </body>

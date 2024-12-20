@@ -6,7 +6,7 @@
     <title>Inbox</title>
     <link rel="stylesheet" href="inbox.css">
 </head>
-<?php include 'userdashboard/user-nav.php'; ?>
+<?php include 'usernavigation.php'; ?>
 
 <body>
     <div class="inbox-container">

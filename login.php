@@ -3,40 +3,36 @@ session_start();
 include_once('connection.php');
 
 if (isset($_POST['login'])) {
-
     $username = $_POST['username'];
     $password = md5($_POST['password']);
 
-    $sql = "SELECT * FROM `tbl_user` WHERE `username`='$username' AND `password`='$password'";
-    $result = mysqli_query($conn, $sql);
-
-    if (empty($_POST['username']) && empty($_POST['password'])) {
+    if (empty($username) && empty($password)) {
         echo "<script>alert('Please Fill Username and Password');</script>";
         exit;
-    } elseif (empty($_POST['password'])) {
+    } elseif (empty($password)) {
         echo "<script>alert('Please Fill Password');</script>";
         exit;
-    } elseif (empty($_POST['username'])) {
-        echo "<script>alert('Please Fill Username);</script>";
+    } elseif (empty($username)) {
+        echo "<script>alert('Please Fill Username');</script>";
         exit;
     } else {
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_array($result);
-            $name = $row['name'];
-            $username = $row['username'];
-            $password = $row['password'];
+        $sql = "SELECT * FROM `tbl_user` WHERE `username`=? AND `password`=?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ss", $username, $password);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-
-            if ($username == $username && $password == $password) {
-                $_SESSION['name'] = $name;
-                $_SESSION['username'] = $username;
-                $_SESSION['password'] = $password;
-                header('location:welcome.php');
-            }
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $_SESSION['id'] = $row['id'];
+            $_SESSION['name'] = $row['name'];
+            $_SESSION['username'] = $row['username'];
+            header('Location: welcome.php');
+            exit();
         } else {
             echo "<script>alert('Invalid Username or Password');</script>";
-            exit;
+            exit();
         }
     }
-
 }
+?>

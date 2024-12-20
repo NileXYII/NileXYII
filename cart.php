@@ -241,7 +241,7 @@ function calculateCartTotal($cart) {
     </style>
 </head>
 <body>
-    <?php include 'nav.php'; ?>
+<?php include 'usernavigation.php'; ?>
 
     <div class="cart-container">
         <h1>Your Shopping Cart</h1>

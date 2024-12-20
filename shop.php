@@ -85,6 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_to_cart'])) {
         // Add to cart
         CartManager::addToCart($product, $quantity);
 
+        // Set success message for pop-up notification
+        $_SESSION['success'] = "Product successfully added to cart.";
+
         // Redirect to prevent form resubmission
         header("Location: " . $_SERVER['PHP_SELF']);
         exit();
@@ -130,25 +133,116 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shop</title>
-    <link rel="stylesheet" href="shop.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(45deg,rgb(118, 147, 119),rgb(118, 170, 117),rgb(96, 122, 91));
+            background-size: 300% 300%;
+            animation: gradientBG 8s ease infinite;
+        }
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        .hover-grow:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out;
+        }
+        .card {
+            background: linear-gradient(to bottom right,rgb(255, 255, 255),rgb(53, 72, 54));
+            border: 1px solidrgb(24, 25, 28);
+            animation: moveLines 4s linear infinite;
+        }
+        @keyframes moveLines {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 100% 100%;
+            }
+        }
+        .badge {
+            background-color: #facc15;
+            color: #000;
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 0.25rem 0.5rem;
+            border-radius: 9999px;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        .card:hover .badge {
+            animation: shake 0.5s;
+        }
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-2px);
+            }
+            50% {
+                transform: translateX(2px);
+            }
+            75% {
+                transform: translateX(-2px);
+            }
+        }
+    </style>
+    <script>
+        // Display notification on product addition
+        document.addEventListener('DOMContentLoaded', function() {
+            const successMessage = "<?php echo isset($_SESSION['success']) ? $_SESSION['success'] : ''; ?>";
+            if (successMessage) {
+                alert(successMessage);
+                <?php unset($_SESSION['success']); ?>
+            }
+        });
+    </script>
 </head>
-<body>
-    <?php include 'usernavigation.php'; ?>
+<body class="text-gray-900">
+<?php include 'usernavigation.php'; ?>
 
-    <div class="content">
-        <h1></h1>
+    <!-- Cart Button -->
+    <div class="fixed top-4 right-4">
+        <a href="cart.php" class="bg-yellow-400 text-black py-2 px-6 rounded-full shadow hover:bg-yellow-500 transition">
+            View Cart
+        </a>
+    </div>
+
+    <div class="container mx-auto p-6">
+        <h1 class="text-4xl font-bold text-center mb-10 fade-in"> </h1>
 
         <!-- Error Message Display -->
         <?php 
         if (isset($_SESSION['error'])) {
-            echo "<div class='error-message'>" . htmlspecialchars($_SESSION['error']) . "</div>";
+            echo "<div class='text-red-500 text-center mb-4'>" . htmlspecialchars($_SESSION['error']) . "</div>";
             unset($_SESSION['error']);
         }
         ?>
 
-        <div class="product-list">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <?php while ($row = $result->fetch_assoc()): ?>
-                <div class="product">
+                <div class="relative p-6 card rounded-lg shadow-lg hover-grow">
                     <?php
                     // Clean and validate image path
                     $cleanedImagePath = cleanImagePath($row['image']);
@@ -156,42 +250,41 @@ try {
                     $fullImagePath = $_SERVER['DOCUMENT_ROOT'] . '/vape/' . $imagePath;
                     ?>
 
+                    <!-- Badge for New or Popular -->
+                    <div class="badge">New</div>
+
                     <!-- Image Display with Error Handling -->
                     <?php if (file_exists($fullImagePath)): ?>
-                        <img src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
+                        <img class="w-full h-40 object-cover rounded-t-lg" src="<?= htmlspecialchars($imagePath) ?>" alt="<?= htmlspecialchars($row['name']) ?>">
                     <?php else: ?>
-                        <div class="no-image">
+                        <div class="w-full h-40 flex items-center justify-center bg-gray-200 text-gray-500 rounded-t-lg">
                             <p>Image Unavailable</p>
-                            <!-- Debug info (remove in production) -->
-                            <small><?= htmlspecialchars($fullImagePath) ?></small>
                         </div>
                     <?php endif; ?>
 
-                    <h2><?= htmlspecialchars($row['name']) ?></h2>
-                    <p>Price: <?= number_format($row['price'], 2) ?> PHP</p>
+                    <h2 class="mt-4 text-lg font-semibold text-gray-800"><?= htmlspecialchars($row['name']) ?></h2>
+                    <p class="mt-2 text-gray-600">Price: <?= number_format($row['price'], 2) ?> PHP</p>
 
-                    <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>">
+                    <form method="POST" action="<?= $_SERVER['PHP_SELF'] ?>" class="mt-4">
                         <input type="hidden" name="product_id" value="<?= $row['id'] ?>">
                         <input type="hidden" name="product_name" value="<?= $row['name'] ?>">
                         <input type="hidden" name="product_price" value="<?= $row['price'] ?>">
                         <input type="hidden" name="product_image" value="<?= $row['image'] ?>">
-                        <input type="number" name="quantity" value="1" min="1" max="10" required>
-                        <button type="submit" name="add_to_cart">Add to Cart</button>
+                        <button type="submit" name="add_to_cart" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition">Add to Cart</button>
                     </form>
                 </div>
             <?php endwhile; ?>
         </div>
 
         <!-- Pagination -->
-        <div class="pagination">
+        <div class="flex justify-center mt-10">
             <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                <a href="?page=<?= $i ?>" <?= ($page == $i ? 'class="active"' : '') ?>>
+                <a href="?page=<?= $i ?>" class="mx-2 px-4 py-2 rounded border <?= ($page == $i ? 'bg-blue-500 text-white' : 'bg-white text-blue-500 border-blue-500') ?> hover:bg-blue-600 hover:text-white transition">
                     <?= $i ?>
                 </a>
             <?php endfor; ?>
         </div>
 
-        <a href="cart.php" class="btn">View Cart</a>
     </div>
 </body>
 </html>

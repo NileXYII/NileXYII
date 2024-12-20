@@ -73,10 +73,10 @@
     <div class="navbar">
         <div class="nav-links">
             <a href="welcome.php">HOME</a>
-            <a href="index.php">PRODUCTS</a>
-            <a href="orders.php">TO BE</a>
-            <a href="inbox.php">CONTINUED</a>
-            <a href="contact_us.php">ON FINAL COOMIT</a>
+            <a href="index.php">DASHBOARD</a>
+            <a href="orders.php">ORDERS</a>
+            <a href="inbox.php">MESSAGES</a>
+            <a href="contact_us.php">NOTIFICATIONS</a>
         </div>
         <div class="search-bar">
             <input type="text" placeholder="Search...">

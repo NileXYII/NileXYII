@@ -8,7 +8,7 @@
 body {
     font-family: 'Arial', sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+    background: linear-gradient(to right, #ece9e6, #ffffff);
     color: #333;
 }
 
@@ -122,11 +122,12 @@ h1::after {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .product button:hover {
     background-color: #2980b9;
+    transform: translateY(-2px);
 }
 
 /* Pagination */

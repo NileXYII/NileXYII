@@ -13,7 +13,7 @@ $username = $_SESSION['username'];
 
 <!DOCTYPE html>
 <html>
-<?php include 'userdashboard/user-nav.php'; ?>
+<?php include 'usernavigation.php'; ?>
 
 <head>
     <title>Contact Us - Mabini Vape Shop</title>
